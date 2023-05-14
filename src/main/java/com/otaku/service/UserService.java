@@ -17,14 +17,12 @@ public class UserService {
     UserRepository userRepository;
 
     public User signUp(SignupDTO signupDTO) throws Exception{
-        Optional<User>optionalUser = userRepository.findByEmail (signupDTO.getEmail ());
-        if(!optionalUser.isEmpty ()){
+
+        if(!userRepository.findByEmail (signupDTO.getEmail ()).isEmpty ()){
             throw new Exception ("Email already exists");
         }
 
-        Optional<User> checkUserNameExists = userRepository.findByUserName (signupDTO.getUserName());
-
-        if(!checkUserNameExists.isEmpty ()){
+        if(!userRepository.findByUserName (signupDTO.getUserName()).isEmpty ()){
             throw new Exception ("UserName already exists");
         }
 
@@ -35,9 +33,10 @@ public class UserService {
         user.setGender (Gender.MALE);
         user.setUserName (signupDTO.getUserName ());
         user.setMobileNumber ("3324832042");
+        user.setPassword (signupDTO.getPassword ());
 
-        try{
-            userRepository.save (user);
+        try {
+             user = userRepository.save (user);
             return user;
         } catch (Exception e){
             throw new Exception ("Error while saving the user");
